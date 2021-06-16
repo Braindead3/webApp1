@@ -1,18 +1,22 @@
 package com.example.webApp1.Entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
-@Table(name = "deliveries", schema = "productmarket", catalog = "")
+@Table(name = "deliveries", schema = "productmarket")
 public class DeliveriesEntity {
     private int id;
     private Integer idProduct;
     private Integer idSupplier;
     private Date deliveryDate;
     private Integer deliveryAmount;
-    private Integer productId;
-    private Integer suppliersId;
+
+    private SuppliersEntity suppliers;
+
+    private ProductsEntity product;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -64,24 +68,25 @@ public class DeliveriesEntity {
         this.deliveryAmount = deliveryAmount;
     }
 
-    @Basic
-    @Column(name = "product_id", nullable = true)
-    public Integer getProductId() {
-        return productId;
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name="idProduct",referencedColumnName = "id")
+    public ProductsEntity getProduct() {
+        return product;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setProduct(ProductsEntity product) {
+        this.product = product;
     }
 
-    @Basic
-    @Column(name = "suppliers_id", nullable = true)
-    public Integer getSuppliersId() {
-        return suppliersId;
+
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name="idSupplier",referencedColumnName = "id")
+    public SuppliersEntity getSuppliers() {
+        return suppliers;
     }
 
-    public void setSuppliersId(Integer suppliersId) {
-        this.suppliersId = suppliersId;
+    public void setSuppliers(SuppliersEntity suppliers) {
+        this.suppliers = suppliers;
     }
 
     @Override
@@ -92,15 +97,10 @@ public class DeliveriesEntity {
         DeliveriesEntity that = (DeliveriesEntity) o;
 
         if (id != that.id) return false;
-        if (idProduct != null ? !idProduct.equals(that.idProduct) : that.idProduct != null) return false;
-        if (idSupplier != null ? !idSupplier.equals(that.idSupplier) : that.idSupplier != null) return false;
-        if (deliveryDate != null ? !deliveryDate.equals(that.deliveryDate) : that.deliveryDate != null) return false;
-        if (deliveryAmount != null ? !deliveryAmount.equals(that.deliveryAmount) : that.deliveryAmount != null)
-            return false;
-        if (productId != null ? !productId.equals(that.productId) : that.productId != null) return false;
-        if (suppliersId != null ? !suppliersId.equals(that.suppliersId) : that.suppliersId != null) return false;
-
-        return true;
+        if (!Objects.equals(idProduct, that.idProduct)) return false;
+        if (!Objects.equals(idSupplier, that.idSupplier)) return false;
+        if (!Objects.equals(deliveryDate, that.deliveryDate)) return false;
+        return Objects.equals(deliveryAmount, that.deliveryAmount);
     }
 
     @Override
@@ -110,8 +110,19 @@ public class DeliveriesEntity {
         result = 31 * result + (idSupplier != null ? idSupplier.hashCode() : 0);
         result = 31 * result + (deliveryDate != null ? deliveryDate.hashCode() : 0);
         result = 31 * result + (deliveryAmount != null ? deliveryAmount.hashCode() : 0);
-        result = 31 * result + (productId != null ? productId.hashCode() : 0);
-        result = 31 * result + (suppliersId != null ? suppliersId.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "DeliveriesEntity{" +
+                "id=" + id +
+                ", idProduct=" + idProduct +
+                ", idSupplier=" + idSupplier +
+                ", deliveryDate=" + deliveryDate +
+                ", deliveryAmount=" + deliveryAmount +
+                ", suppliers=" + suppliers +
+                ", product=" + product +
+                '}';
     }
 }

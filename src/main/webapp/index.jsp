@@ -1,13 +1,27 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="jdk.jfr.MetadataDefinition" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.example.webApp1.Db" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
+<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Menu</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
+<br>
+    <h1>Choose table</h1>
+    <%
+        List<String> tableNames=new ArrayList<>(Arrays.asList("Category","Customers","Deliveries","Market","Products","Sales","Suppliers"));
+        request.setAttribute("tableNames",tableNames);
+    %>
 <br/>
-<a href="hello-servlet">Hello Servlet</a>
+    <ur>
+        <c:forEach var="tableName" items="${tableNames}">
+            <li>
+                <a href="<c:url value='${tableName}'/>">${tableName}</a>
+            </li>
+        </c:forEach>
+    </ur>
 </body>
 </html>

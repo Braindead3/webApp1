@@ -1,16 +1,36 @@
 package com.example.webApp1.Entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "products", schema = "productmarket", catalog = "")
+@Table(name = "products", schema = "productmarket")
 public class ProductsEntity {
-    private int id;
-    private String productName;
-    private Integer idCategory;
 
     @Id
     @Column(name = "id", nullable = false)
+    private int id;
+
+    @Basic
+    @Column(name = "productName", length = 30)
+    private String productName;
+
+    @ManyToOne
+    @JoinColumn(name="idCategory",referencedColumnName ="id")
+    private CategoryEntity category;
+
+    @OneToMany(mappedBy = "productMarket",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<MarketEntity> market;
+
+    @OneToMany(mappedBy = "product")
+    private Set<DeliveriesEntity> suppliers = new HashSet<>();
+
+    @OneToMany(mappedBy = "productSales")
+    private Set<SalesEntity> customerSales = new HashSet<>();
+
     public int getId() {
         return id;
     }
@@ -19,8 +39,6 @@ public class ProductsEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "productName", nullable = true, length = 30)
     public String getProductName() {
         return productName;
     }
@@ -29,14 +47,36 @@ public class ProductsEntity {
         this.productName = productName;
     }
 
-    @Basic
-    @Column(name = "idCategory", nullable = true)
-    public Integer getIdCategory() {
-        return idCategory;
+    public CategoryEntity getCategory() {
+        return category;
     }
 
-    public void setIdCategory(Integer idCategory) {
-        this.idCategory = idCategory;
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
+    }
+
+    public List<MarketEntity> getMarket() {
+        return market;
+    }
+
+    public void setMarket(List<MarketEntity> market) {
+        this.market = market;
+    }
+
+    public Set<DeliveriesEntity> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(Set<DeliveriesEntity> suppliers) {
+        this.suppliers = suppliers;
+    }
+
+    public Set<SalesEntity> getCustomerSales() {
+        return customerSales;
+    }
+
+    public void setCustomerSales(Set<SalesEntity> customerSales) {
+        this.customerSales = customerSales;
     }
 
     @Override
@@ -47,17 +87,18 @@ public class ProductsEntity {
         ProductsEntity that = (ProductsEntity) o;
 
         if (id != that.id) return false;
-        if (productName != null ? !productName.equals(that.productName) : that.productName != null) return false;
-        if (idCategory != null ? !idCategory.equals(that.idCategory) : that.idCategory != null) return false;
-
-        return true;
+        return Objects.equals(productName, that.productName);
     }
 
     @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + (productName != null ? productName.hashCode() : 0);
-        result = 31 * result + (idCategory != null ? idCategory.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return " name='" + productName + '\'' ;
     }
 }

@@ -1,17 +1,40 @@
 package com.example.webApp1.Entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "customers", schema = "productmarket", catalog = "")
+@Table(name = "customers", schema = "productmarket")
 public class CustomersEntity {
-    private int id;
-    private String userLogin;
-    private String userPassword;
-    private String userEmail;
 
     @Id
     @Column(name = "id", nullable = false)
+    private int id;
+
+    @Basic
+    @Column(name = "userLogin", nullable = true, length = 30)
+    private String userLogin;
+
+    @Basic
+    @Column(name = "userPassword", nullable = true, length = 30)
+    private String userPassword;
+
+    @Basic
+    @Column(name = "userEmail", nullable = true, length = 30)
+    private String userEmail;
+
+    @OneToMany(mappedBy = "customerSales")
+    private final Set<SalesEntity> productSales = new HashSet<>();
+
+    public CustomersEntity() { }
+
+    public CustomersEntity(String userLogin, String userPassword, String userEmail) {
+        this.userLogin = userLogin;
+        this.userPassword = userPassword;
+        this.userEmail = userEmail;
+    }
+
     public int getId() {
         return id;
     }
@@ -20,8 +43,6 @@ public class CustomersEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "userLogin", nullable = true, length = 30)
     public String getUserLogin() {
         return userLogin;
     }
@@ -30,8 +51,6 @@ public class CustomersEntity {
         this.userLogin = userLogin;
     }
 
-    @Basic
-    @Column(name = "userPassword", nullable = true, length = 30)
     public String getUserPassword() {
         return userPassword;
     }
@@ -40,8 +59,6 @@ public class CustomersEntity {
         this.userPassword = userPassword;
     }
 
-    @Basic
-    @Column(name = "userEmail", nullable = true, length = 30)
     public String getUserEmail() {
         return userEmail;
     }
@@ -72,5 +89,15 @@ public class CustomersEntity {
         result = 31 * result + (userPassword != null ? userPassword.hashCode() : 0);
         result = 31 * result + (userEmail != null ? userEmail.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomersEntity{" +
+                "id=" + id +
+                ", userLogin='" + userLogin + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                '}';
     }
 }
